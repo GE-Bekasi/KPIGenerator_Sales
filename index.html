@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI Generator - Golden English Bekasi Area (Sales Team)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8960C;
+            --black: #0D0D0D;
+            --black-light: #1A1A1A;
+            --black-lighter: #2D2D2D;
+            --white: #FAFAFA;
+            --gray: #888888;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--black-light) 0%, var(--black) 100%);
+            border-bottom: 2px solid var(--gold);
+            padding: 30px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        .logo-section p {
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 5px;
+        }
+
+        .period-selector {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .period-selector label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-light);
+        }
+
+        .period-selector select,
+        .period-selector input {
+            background: var(--black-lighter);
+            border: 1px solid var(--gold-dark);
+            color: var(--white);
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .period-selector select:hover,
+        .period-selector input:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        /* Target Settings Section */
+        .target-section {
+            background: linear-gradient(145deg, var(--black-light) 0%, var(--black-lighter) 100%);
+            border: 1px solid var(--gold-dark);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .target-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--gold);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .target-section h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .target-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .target-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .target-item label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gold-light);
+        }
+
+        .target-item input {
+            background: var(--black);
+            border: 1px solid var(--black-lighter);
+            color: var(--white);
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .target-item input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        /* Employee Cards */
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .employee-card {
+            background: linear-gradient(145deg, var(--black-light) 0%, var(--black-lighter) 100%);
+            border: 1px solid var(--black-lighter);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .employee-card:hover {
+            border-color: var(--gold-dark);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .employee-header {
+            background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold) 100%);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .employee-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--black);
+        }
+
+        .employee-score {
+            background: var(--black);
+            color: var(--gold);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .employee-body {
+            padding: 25px;
+        }
+
+        .metric-group {
+            margin-bottom: 20px;
+        }
+
+        .metric-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .metric-group-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--black-lighter);
+        }
+
+        .metric-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .metric-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .metric-label {
+            flex: 1;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .metric-input {
+            width: 100px;
+            background: var(--black);
+            border: 1px solid var(--black-lighter);
+            color: var(--white);
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .metric-input.score-display {
+            background: transparent;
+            border-color: var(--gold-dark);
+            color: var(--gold);
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .metric-score {
+            width: 60px;
+            text-align: right;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .metric-score.excellent {
+            color: var(--success);
+        }
+
+        .metric-score.good {
+            color: var(--gold);
+        }
+
+        .metric-score.warning {
+            color: var(--warning);
+        }
+
+        .metric-score.poor {
+            color: var(--danger);
+        }
+
+        /* Data Tracking Section */
+        .tracking-section {
+            background: var(--black-lighter);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .tracking-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray);
+            margin-bottom: 12px;
+        }
+
+        .tracking-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--black-light);
+        }
+
+        .tracking-row:last-child {
+            border-bottom: none;
+        }
+
+        .tracking-label {
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        .tracking-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gold-light);
+        }
+
+        /* Feedback Section */
+        .feedback-section {
+            margin-top: 20px;
+        }
+
+        .feedback-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .feedback-textarea {
+            width: 100%;
+            background: var(--black);
+            border: 1px solid var(--black-lighter);
+            color: var(--white);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            resize: vertical;
+            min-height: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        /* Individual Export Button */
+        .individual-export {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--black-lighter);
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-preview {
+            flex: 1;
+            padding: 14px 20px;
+            background: var(--black-lighter);
+            border: 1px solid var(--gray);
+            color: var(--white);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-preview:hover {
+            background: var(--gray);
+            color: var(--black);
+        }
+
+        .btn-individual {
+            flex: 1;
+            padding: 14px 20px;
+            background: transparent;
+            border: 1px solid var(--gold-dark);
+            color: var(--gold);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-individual:hover {
+            background: var(--gold);
+            color: var(--black);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Preview Modal */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .preview-modal.show {
+            display: block;
+        }
+
+        .preview-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .preview-close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            background: var(--gold);
+            color: var(--black);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-close:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .preview-actions {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1001;
+        }
+
+        .preview-content {
+            background: #0D0D0D;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Summary Section */
+        .summary-section {
+            background: linear-gradient(145deg, var(--black-light) 0%, var(--black-lighter) 100%);
+            border: 2px solid var(--gold);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .summary-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .summary-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .summary-header p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--black);
+            border: 1px solid var(--black-lighter);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--gold-dark);
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray);
+        }
+
+        .chart-container {
+            background: var(--black);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ranking-table th {
+            background: var(--gold);
+            color: var(--black);
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .ranking-table th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        .ranking-table th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        .ranking-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--black-lighter);
+            font-size: 14px;
+        }
+
+        .ranking-table tr:last-child td:first-child {
+            border-radius: 0 0 0 8px;
+        }
+
+        .ranking-table tr:last-child td:last-child {
+            border-radius: 0 0 8px 0;
+        }
+
+        .ranking-table tr:hover td {
+            background: var(--black-lighter);
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--black);
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%);
+            color: var(--black);
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%);
+            color: var(--white);
+        }
+
+        .rank-other {
+            background: var(--black-lighter);
+            color: var(--gray);
+        }
+
+        .score-bar {
+            height: 8px;
+            background: var(--black-lighter);
+            border-radius: 4px;
+            overflow: hidden;
+            width: 150px;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold) 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Buttons */
+        .actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold) 100%);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn:disabled:hover {
+            opacity: 0.4;
+            background: transparent;
+            color: var(--gold);
+        }
+
+        .btn-primary:disabled:hover {
+            background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold) 100%);
+            color: var(--black);
+        }
+
+        /* PDF Export Styles */
+        .pdf-container {
+            display: none;
+        }
+
+        .pdf-container.show {
+            display: block;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .employee-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+
+        /* Loading Animation */
+        .calculating {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <h1>Golden English</h1>
+                <p>Bekasi Area • Sales Team KPI</p>
+                <p style="font-size: 10px; color: var(--gold); margin-top: 3px;">Insight by M Rafli Febriansyah</p>
+            </div>
+            <div class="period-selector">
+                <div>
+                    <label>Bulan</label>
+                    <select id="month">
+                        <option value="1">Januari</option>
+                        <option value="2">Februari</option>
+                        <option value="3">Maret</option>
+                        <option value="4">April</option>
+                        <option value="5">Mei</option>
+                        <option value="6">Juni</option>
+                        <option value="7">Juli</option>
+                        <option value="8">Agustus</option>
+                        <option value="9">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Tahun</label>
+                    <input type="number" id="year" value="2025" min="2020" max="2030">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Target Settings -->
+        <section class="target-section">
+            <h2>Target Bulanan</h2>
+            <div class="target-grid">
+                <div class="target-item">
+                    <label>Target Revenue (Rp)</label>
+                    <input type="number" id="targetRevenue" placeholder="50000000" value="50000000">
+                </div>
+                <div class="target-item">
+                    <label>Min. Rasio Closing (%)</label>
+                    <input type="number" id="targetClosing" value="10" readonly>
+                </div>
+                <div class="target-item">
+                    <label>Min. Trial Class (orang)</label>
+                    <input type="number" id="targetTrial" value="20" readonly>
+                </div>
+                <div class="target-item">
+                    <label>Max. Kesalahan Data</label>
+                    <input type="number" id="targetError" value="2" readonly>
+                </div>
+                <div class="target-item">
+                    <label>Min. Typing Test Score</label>
+                    <input type="number" id="targetTyping" value="90" readonly>
+                </div>
+            </div>
+        </section>
+
+        <!-- Employee Cards -->
+        <div class="employee-grid" id="employeeGrid">
+            <!-- Cards will be generated by JavaScript -->
+        </div>
+
+        <!-- Summary Section -->
+        <section class="summary-section" id="summarySection">
+            <div class="summary-header">
+                <h2>Summary Report</h2>
+                <p id="summaryPeriod">Periode: Januari 2025</p>
+                <p style="font-size: 11px; color: var(--gold); margin-top: 8px;">Insight by M Rafli Febriansyah</p>
+            </div>
+
+            <div class="summary-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="avgScore">0%</div>
+                    <div class="stat-label">Rata-rata Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRevenue">Rp 0</div>
+                    <div class="stat-label">Total Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalTrial">0</div>
+                    <div class="stat-label">Total Trial Class</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgFollowUp">0%</div>
+                    <div class="stat-label">Avg Response Rate</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Nama</th>
+                        <th>Final Score</th>
+                        <th>Performance</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingBody">
+                    <!-- Ranking will be generated by JavaScript -->
+                </tbody>
+            </table>
+
+            <div class="actions">
+                <button class="btn btn-secondary" id="btnDownloadAll" onclick="exportAllIndividualPDF()" disabled
+                    title="Isi semua data terlebih dahulu">📑 Download Semua (Per Orang)</button>
+                <button class="btn btn-primary" id="btnDownloadSummary" onclick="exportPDF()" disabled
+                    title="Isi semua data terlebih dahulu">📄 Download Summary</button>
+                <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset Data</button>
+            </div>
+        </section>
+
+        <!-- Preview Modal -->
+        <div class="preview-modal" id="previewModal">
+            <button class="preview-close" onclick="closePreview()">✕</button>
+            <div class="preview-container">
+                <div class="preview-content" id="previewContent">
+                    <!-- Preview content will be injected here -->
+                </div>
+            </div>
+            <div class="preview-actions">
+                <button class="btn btn-secondary" onclick="closePreview()">← Kembali Edit</button>
+                <button class="btn btn-primary" id="previewDownloadBtn">📄 Download PDF</button>
+            </div>
+        </div>
+
+        <!-- Footer Watermark -->
+        <footer
+            style="text-align: center; padding: 30px 20px; border-top: 1px solid var(--black-lighter); margin-top: 40px;">
+            <p style="font-size: 12px; color: var(--gold); font-weight: 600;">Insight by M Rafli Febriansyah</p>
+            <p style="font-size: 10px; color: var(--gray); margin-top: 5px;">Golden English Bekasi Area • KPI Management
+                System</p>
+        </footer>
+    </main>
+
+    <script>
+        // Employee Data
+        const employees = [
+            { id: 1, name: 'Amalia Putri' },
+            { id: 2, name: 'Nadya Niswa Karima' },
+            { id: 3, name: 'Muhamad Rafi' },
+            { id: 4, name: 'Cemara Ayu' },
+            { id: 5, name: 'Zulfa Abdul' }
+        ];
+
+        // KPI Weights (Follow Up jadi data tracking, bukan scored)
+        const weights = {
+            revenue: 0.40,
+            closing: 0.15,
+            trial: 0.15,
+            accuracy: 0.10,
+            typing: 0.10,
+            collaboration: 0.05,
+            tools: 0.05
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            generateEmployeeCards();
+            updateSummary();
+            initChart();
+            setCurrentPeriod();
+        });
+
+        function setCurrentPeriod() {
+            const now = new Date();
+            document.getElementById('month').value = now.getMonth() + 1;
+            document.getElementById('year').value = now.getFullYear();
+            updatePeriodDisplay();
+        }
+
+        function generateEmployeeCards() {
+            const grid = document.getElementById('employeeGrid');
+            grid.innerHTML = '';
+
+            employees.forEach(emp => {
+                const card = document.createElement('div');
+                card.className = 'employee-card';
+                card.id = `card-${emp.id}`;
+                card.innerHTML = `
+                    <div class="employee-header">
+                        <span class="employee-name">${emp.name}</span>
+                        <span class="employee-score" id="total-${emp.id}">0%</span>
+                    </div>
+                    <div class="employee-body">
+                        <!-- Financial -->
+                        <div class="metric-group">
+                            <div class="metric-group-title">Financial (50%)</div>
+                            <div class="metric-row">
+                                <span class="metric-label">Revenue Achieved (Rp)</span>
+                                <input type="number" class="metric-input" id="revenue-${emp.id}" placeholder="0" oninput="calculateScore(${emp.id})">
+                                <span class="metric-score" id="revenueScore-${emp.id}">0%</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Total Leads Masuk</span>
+                                <input type="number" class="metric-input" id="leads-${emp.id}" placeholder="0" oninput="calculateScore(${emp.id})">
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Total Closing</span>
+                                <input type="number" class="metric-input" id="closing-${emp.id}" placeholder="0" oninput="calculateScore(${emp.id})">
+                                <span class="metric-score" id="closingScore-${emp.id}">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Customer -->
+                        <div class="metric-group">
+                            <div class="metric-group-title">Customer (15%)</div>
+                            <div class="metric-row">
+                                <span class="metric-label">Trial Class Hadir</span>
+                                <input type="number" class="metric-input" id="trial-${emp.id}" placeholder="0" oninput="calculateScore(${emp.id})">
+                                <span class="metric-score" id="trialScore-${emp.id}">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Internal Process -->
+                        <div class="metric-group">
+                            <div class="metric-group-title">Internal Process (10%)</div>
+                            <div class="metric-row">
+                                <span class="metric-label">Jumlah Kesalahan Data</span>
+                                <input type="number" class="metric-input" id="errors-${emp.id}" placeholder="0" min="0" oninput="calculateScore(${emp.id})">
+                                <span class="metric-score" id="errorScore-${emp.id}">100%</span>
+                            </div>
+                        </div>
+
+                        <!-- Learning & Growth -->
+                        <div class="metric-group">
+                            <div class="metric-group-title">Learning & Growth (15%)</div>
+                            <div class="metric-row">
+                                <span class="metric-label">Typing Test Score</span>
+                                <input type="number" class="metric-input" id="typing-${emp.id}" placeholder="0" max="100" oninput="calculateScore(${emp.id})">
+                                <span class="metric-score" id="typingScore-${emp.id}">0%</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Kolaborasi Tim (1-5)</span>
+                                <input type="number" class="metric-input" id="collab-${emp.id}" placeholder="1" min="1" max="5" oninput="calculateScore(${emp.id})">
+                                <span class="metric-score" id="collabScore-${emp.id}">0%</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Pemahaman Tools (1-5)</span>
+                                <input type="number" class="metric-input" id="tools-${emp.id}" placeholder="1" min="1" max="5" oninput="calculateScore(${emp.id})">
+                                <span class="metric-score" id="toolsScore-${emp.id}">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Data Tracking -->
+                        <div class="tracking-section">
+                            <div class="tracking-title">Data Tracking (Non-Scored)</div>
+                            <div class="metric-row" style="margin-bottom: 10px;">
+                                <span class="metric-label">Leads di-Follow Up</span>
+                                <input type="number" class="metric-input" id="followUp-${emp.id}" placeholder="0" oninput="calculateScore(${emp.id})">
+                            </div>
+                            <div class="metric-row" style="margin-bottom: 10px;">
+                                <span class="metric-label">Leads yang Response</span>
+                                <input type="number" class="metric-input" id="response-${emp.id}" placeholder="0" oninput="calculateScore(${emp.id})">
+                            </div>
+                            <div class="tracking-row">
+                                <span class="tracking-label">Rasio Closing</span>
+                                <span class="tracking-value" id="closingRatio-${emp.id}">0%</span>
+                            </div>
+                            <div class="tracking-row">
+                                <span class="tracking-label">Follow Up Rate</span>
+                                <span class="tracking-value" id="followUpRate-${emp.id}">0%</span>
+                            </div>
+                            <div class="tracking-row">
+                                <span class="tracking-label">Response Rate</span>
+                                <span class="tracking-value" id="responseRate-${emp.id}">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Feedback -->
+                        <div class="feedback-section">
+                            <label class="feedback-label">Feedback</label>
+                            <textarea class="feedback-textarea" id="feedback-${emp.id}" placeholder="Tambahkan feedback untuk ${emp.name}..."></textarea>
+                        </div>
+
+                        <!-- Individual Export Button -->
+                        <div class="individual-export">
+                            <button class="btn btn-preview" onclick="previewIndividualPDF(${emp.id}, \`${emp.name}\`)">
+                                👁️ Preview
+                            </button>
+                            <button class="btn btn-individual" onclick="exportIndividualPDF(${emp.id}, \`${emp.name}\`)">
+                                📄 Download PDF
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function calculateScore(empId) {
+            const targetRevenue = parseFloat(document.getElementById('targetRevenue').value) || 50000000;
+
+            // Get input values
+            const revenue = parseFloat(document.getElementById(`revenue-${empId}`).value) || 0;
+            const leads = parseFloat(document.getElementById(`leads-${empId}`).value) || 0;
+            const closing = parseFloat(document.getElementById(`closing-${empId}`).value) || 0;
+            const trial = parseFloat(document.getElementById(`trial-${empId}`).value) || 0;
+            const followUp = parseFloat(document.getElementById(`followUp-${empId}`).value) || 0;
+            const response = parseFloat(document.getElementById(`response-${empId}`).value) || 0;
+            const errors = parseFloat(document.getElementById(`errors-${empId}`).value) || 0;
+            const typing = parseFloat(document.getElementById(`typing-${empId}`).value) || 0;
+            const collab = parseFloat(document.getElementById(`collab-${empId}`).value) || 0;
+            const tools = parseFloat(document.getElementById(`tools-${empId}`).value) || 0;
+
+            // Calculate individual scores (capped at 100%)
+            const revenueScore = Math.min((revenue / targetRevenue) * 100, 100);
+            const closingRatio = leads > 0 ? (closing / leads) * 100 : 0;
+            const closingScore = Math.min((closingRatio / 10) * 100, 100);
+            const trialScore = Math.min((trial / 20) * 100, 100);
+
+            // Data tracking calculations (non-scored)
+            const followUpRate = leads > 0 ? (followUp / leads) * 100 : 0;
+            const responseRate = followUp > 0 ? (response / followUp) * 100 : 0;
+
+            // Error scoring (inverse)
+            let errorScore = 100;
+            if (errors === 1) errorScore = 75;
+            else if (errors === 2) errorScore = 50;
+            else if (errors > 2) errorScore = 0;
+
+            const typingScore = Math.min((typing / 90) * 100, 100);
+            const collabScore = (collab / 5) * 100;
+            const toolsScore = (tools / 5) * 100;
+
+            // Update display
+            updateScoreDisplay(`revenueScore-${empId}`, revenueScore);
+            updateScoreDisplay(`closingScore-${empId}`, closingScore);
+            updateScoreDisplay(`trialScore-${empId}`, trialScore);
+            updateScoreDisplay(`errorScore-${empId}`, errorScore);
+            updateScoreDisplay(`typingScore-${empId}`, typingScore);
+            updateScoreDisplay(`collabScore-${empId}`, collabScore);
+            updateScoreDisplay(`toolsScore-${empId}`, toolsScore);
+
+            // Update tracking (non-scored)
+            document.getElementById(`closingRatio-${empId}`).textContent = closingRatio.toFixed(1) + '%';
+            document.getElementById(`followUpRate-${empId}`).textContent = followUpRate.toFixed(1) + '%';
+            document.getElementById(`responseRate-${empId}`).textContent = responseRate.toFixed(1) + '%';
+
+            // Calculate weighted total (without followUp)
+            const totalScore =
+                (revenueScore * weights.revenue) +
+                (closingScore * weights.closing) +
+                (trialScore * weights.trial) +
+                (errorScore * weights.accuracy) +
+                (typingScore * weights.typing) +
+                (collabScore * weights.collaboration) +
+                (toolsScore * weights.tools);
+
+            document.getElementById(`total-${empId}`).textContent = totalScore.toFixed(1) + '%';
+            document.getElementById(`total-${empId}`).classList.add('calculating');
+            setTimeout(() => {
+                document.getElementById(`total-${empId}`).classList.remove('calculating');
+            }, 500);
+
+            updateSummary();
+            checkAllDataFilled();
+        }
+
+        // Check if all employee data is filled
+        function checkAllDataFilled() {
+            let allFilled = true;
+
+            employees.forEach(emp => {
+                const revenue = document.getElementById(`revenue-${emp.id}`).value;
+                const leads = document.getElementById(`leads-${emp.id}`).value;
+                const closing = document.getElementById(`closing-${emp.id}`).value;
+                const trial = document.getElementById(`trial-${emp.id}`).value;
+                const typing = document.getElementById(`typing-${emp.id}`).value;
+                const collab = document.getElementById(`collab-${emp.id}`).value;
+                const tools = document.getElementById(`tools-${emp.id}`).value;
+
+                // Check required fields (minimal revenue, leads, closing, trial, typing, collab, tools)
+                if (!revenue || !leads || !closing || !trial || !typing || !collab || !tools) {
+                    allFilled = false;
+                }
+            });
+
+            // Enable/disable buttons
+            const btnDownloadAll = document.getElementById('btnDownloadAll');
+            const btnDownloadSummary = document.getElementById('btnDownloadSummary');
+
+            if (allFilled) {
+                btnDownloadAll.disabled = false;
+                btnDownloadAll.title = 'Download semua PDF';
+                btnDownloadSummary.disabled = false;
+                btnDownloadSummary.title = 'Download summary PDF';
+            } else {
+                btnDownloadAll.disabled = true;
+                btnDownloadAll.title = 'Isi semua data terlebih dahulu';
+                btnDownloadSummary.disabled = true;
+                btnDownloadSummary.title = 'Isi semua data terlebih dahulu';
+            }
+        }
+
+        function updateScoreDisplay(elementId, score) {
+            const element = document.getElementById(elementId);
+            element.textContent = score.toFixed(1) + '%';
+
+            element.classList.remove('excellent', 'good', 'warning', 'poor');
+            if (score >= 90) element.classList.add('excellent');
+            else if (score >= 70) element.classList.add('good');
+            else if (score >= 50) element.classList.add('warning');
+            else element.classList.add('poor');
+        }
+
+        function updateSummary() {
+            updatePeriodDisplay();
+
+            let totalScore = 0;
+            let totalRevenue = 0;
+            let totalTrial = 0;
+            let totalResponseRate = 0;
+            let validResponseCount = 0;
+
+            const rankings = [];
+
+            employees.forEach(emp => {
+                const score = parseFloat(document.getElementById(`total-${emp.id}`).textContent) || 0;
+                const revenue = parseFloat(document.getElementById(`revenue-${emp.id}`).value) || 0;
+                const trial = parseFloat(document.getElementById(`trial-${emp.id}`).value) || 0;
+                const followUp = parseFloat(document.getElementById(`followUp-${emp.id}`).value) || 0;
+                const response = parseFloat(document.getElementById(`response-${emp.id}`).value) || 0;
+
+                totalScore += score;
+                totalRevenue += revenue;
+                totalTrial += trial;
+
+                if (followUp > 0) {
+                    totalResponseRate += (response / followUp) * 100;
+                    validResponseCount++;
+                }
+
+                rankings.push({ name: emp.name, score: score, id: emp.id });
+            });
+
+            // Update stats
+            document.getElementById('avgScore').textContent = (totalScore / employees.length).toFixed(1) + '%';
+            document.getElementById('totalRevenue').textContent = 'Rp ' + totalRevenue.toLocaleString('id-ID');
+            document.getElementById('totalTrial').textContent = totalTrial;
+            document.getElementById('avgFollowUp').textContent = validResponseCount > 0
+                ? (totalResponseRate / validResponseCount).toFixed(1) + '%'
+                : '0%';
+
+            // Update ranking table
+            rankings.sort((a, b) => b.score - a.score);
+            const rankingBody = document.getElementById('rankingBody');
+            rankingBody.innerHTML = '';
+
+            rankings.forEach((emp, index) => {
+                const rank = index + 1;
+                let rankClass = 'rank-other';
+                if (rank === 1) rankClass = 'rank-1';
+                else if (rank === 2) rankClass = 'rank-2';
+                else if (rank === 3) rankClass = 'rank-3';
+
+                let grade = 'D';
+                if (emp.score >= 90) grade = 'A';
+                else if (emp.score >= 80) grade = 'B';
+                else if (emp.score >= 70) grade = 'C';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="rank-badge ${rankClass}">${rank}</span></td>
+                    <td>${emp.name}</td>
+                    <td><strong>${emp.score.toFixed(1)}%</strong></td>
+                    <td>
+                        <div class="score-bar">
+                            <div class="score-bar-fill" style="width: ${emp.score}%"></div>
+                        </div>
+                    </td>
+                    <td><strong>${grade}</strong></td>
+                `;
+                rankingBody.appendChild(row);
+            });
+
+            updateChart(rankings);
+        }
+
+        function updatePeriodDisplay() {
+            const month = document.getElementById('month');
+            const year = document.getElementById('year').value;
+            const monthName = month.options[month.selectedIndex].text;
+            document.getElementById('summaryPeriod').textContent = `Periode: ${monthName} ${year}`;
+        }
+
+        let chart = null;
+        function initChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: employees.map(e => e.name),
+                    datasets: [{
+                        label: 'Final Score (%)',
+                        data: employees.map(() => 0),
+                        backgroundColor: 'rgba(212, 175, 55, 0.8)',
+                        borderColor: 'rgba(212, 175, 55, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 2.5,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#888',
+                                callback: value => value + '%'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#888'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart(rankings) {
+            if (chart) {
+                chart.data.labels = rankings.map(r => r.name);
+                chart.data.datasets[0].data = rankings.map(r => r.score);
+                chart.update();
+            }
+        }
+
+        function resetAll() {
+            if (confirm('Yakin mau reset semua data?')) {
+                employees.forEach(emp => {
+                    document.getElementById(`revenue-${emp.id}`).value = '';
+                    document.getElementById(`leads-${emp.id}`).value = '';
+                    document.getElementById(`closing-${emp.id}`).value = '';
+                    document.getElementById(`trial-${emp.id}`).value = '';
+                    document.getElementById(`followUp-${emp.id}`).value = '';
+                    document.getElementById(`response-${emp.id}`).value = '';
+                    document.getElementById(`errors-${emp.id}`).value = '';
+                    document.getElementById(`typing-${emp.id}`).value = '';
+                    document.getElementById(`collab-${emp.id}`).value = '';
+                    document.getElementById(`tools-${emp.id}`).value = '';
+                    document.getElementById(`feedback-${emp.id}`).value = '';
+                    calculateScore(emp.id);
+                });
+            }
+        }
+
+        async function exportPDF() {
+            const month = document.getElementById('month');
+            const year = document.getElementById('year').value;
+            const monthName = month.options[month.selectedIndex].text;
+
+            // Hide buttons during export
+            const actions = document.querySelector('.actions');
+            actions.style.display = 'none';
+
+            // Add temporary watermark to summary
+            const summarySection = document.querySelector('.summary-section');
+            const watermarkDiv = document.createElement('div');
+            watermarkDiv.id = 'tempWatermark';
+            watermarkDiv.style.cssText = 'text-align: center; padding: 15px 0; border-top: 1px solid #2D2D2D; margin-top: 20px;';
+            watermarkDiv.innerHTML = '<p style="font-size: 12px; color: #D4AF37; font-weight: 600; margin: 0;">Insight by M Rafli Febriansyah</p>';
+            summarySection.appendChild(watermarkDiv);
+
+            const opt = {
+                margin: 10,
+                filename: `KPI_Summary_Sales_Bekasi_${monthName}_${year}.pdf`,
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: {
+                    scale: 2,
+                    backgroundColor: '#0D0D0D',
+                    useCORS: true,
+                    logging: false
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'landscape'
+                }
+            };
+
+            await html2pdf().set(opt).from(summarySection).save();
+
+            // Remove temporary watermark and restore buttons
+            summarySection.removeChild(watermarkDiv);
+            actions.style.display = 'flex';
+        }
+
+        // Listen for period changes
+        document.getElementById('month').addEventListener('change', updateSummary);
+        document.getElementById('year').addEventListener('change', updateSummary);
+        document.getElementById('targetRevenue').addEventListener('change', function () {
+            employees.forEach(emp => calculateScore(emp.id));
+        });
+
+        // Current preview employee data
+        let currentPreviewEmpId = null;
+        let currentPreviewEmpName = null;
+
+        // Generate PDF Content HTML
+        function generatePDFContent(empId, empName) {
+            // ... (Variable definition tetep sama kayak kodemu) ...
+            const month = document.getElementById('month');
+            const year = document.getElementById('year').value;
+            const monthName = month.options[month.selectedIndex].text;
+            const targetRevenue = parseFloat(document.getElementById('targetRevenue').value) || 0;
+
+            // ... (lanjutkan variable lainnya seperti leads, revenue, dll sama persis) ...
+            const revenue = parseFloat(document.getElementById(`revenue-${empId}`).value) || 0;
+            const leads = parseFloat(document.getElementById(`leads-${empId}`).value) || 0;
+            const closing = parseFloat(document.getElementById(`closing-${empId}`).value) || 0;
+            const trial = parseFloat(document.getElementById(`trial-${empId}`).value) || 0;
+            const followUp = parseFloat(document.getElementById(`followUp-${empId}`).value) || 0;
+            const response = parseFloat(document.getElementById(`response-${empId}`).value) || 0;
+            const errors = parseFloat(document.getElementById(`errors-${empId}`).value) || 0;
+            const typing = parseFloat(document.getElementById(`typing-${empId}`).value) || 0;
+            const collab = parseFloat(document.getElementById(`collab-${empId}`).value) || 0;
+            const tools = parseFloat(document.getElementById(`tools-${empId}`).value) || 0;
+            const feedback = document.getElementById(`feedback-${empId}`).value || '-';
+            const totalScore = document.getElementById(`total-${empId}`).textContent;
+            const revenueScore = document.getElementById(`revenueScore-${empId}`).textContent;
+            const closingScore = document.getElementById(`closingScore-${empId}`).textContent;
+            const trialScore = document.getElementById(`trialScore-${empId}`).textContent;
+            const errorScore = document.getElementById(`errorScore-${empId}`).textContent;
+            const typingScore = document.getElementById(`typingScore-${empId}`).textContent;
+            const collabScore = document.getElementById(`collabScore-${empId}`).textContent;
+            const toolsScore = document.getElementById(`toolsScore-${empId}`).textContent;
+            const closingRatio = document.getElementById(`closingRatio-${empId}`).textContent;
+            const followUpRate = document.getElementById(`followUpRate-${empId}`).textContent;
+            const responseRate = document.getElementById(`responseRate-${empId}`).textContent;
+
+            const scoreNum = parseFloat(totalScore);
+            let grade = 'D', gradeColor = '#F44336';
+            if (scoreNum >= 90) { grade = 'A'; gradeColor = '#4CAF50'; }
+            else if (scoreNum >= 80) { grade = 'B'; gradeColor = '#D4AF37'; }
+            else if (scoreNum >= 70) { grade = 'C'; gradeColor = '#FF9800'; }
+
+            // PERBAIKAN DI SINI:
+            // 1. Padding diubah: Atas 30px (biar agak naik), Kiri/Kanan 40px.
+            // 2. Margin: 0 (Penting!)
+            return `
+            <div id="pdfPage" style="width:794px; height:1123px; background:#0D0D0D; color:#FAFAFA; font-family:Arial,sans-serif; padding:30px 40px 40px 40px; box-sizing:border-box; position:relative; overflow:hidden; margin:0;">
+                
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-30deg); font-size:36px; color:rgba(212,175,55,0.04); font-weight:700; white-space:nowrap; pointer-events:none;">Insight by M Rafli Febriansyah</div>
+                
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #D4AF37; padding-bottom:12px; margin-bottom:15px;">
+                    <div>
+                        <div style="font-size:26px; color:#D4AF37; font-weight:bold;">Golden English</div>
+                        <div style="font-size:11px; color:#888; text-transform:uppercase; letter-spacing:2px;">Bekasi Area • Sales Team</div>
+                        <div style="font-size:11px; color:#D4AF37;">Insight by M Rafli Febriansyah</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:11px; color:#888; text-transform:uppercase;">KPI Report</div>
+                        <div style="font-size:18px; color:#D4AF37; font-weight:600;">${monthName} ${year}</div>
+                    </div>
+                </div>
+
+                <div style="background:linear-gradient(90deg,#B8960C,#D4AF37); padding:15px 20px; border-radius:8px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:10px; color:#0D0D0D; text-transform:uppercase;">Nama Karyawan</div>
+                        <div style="font-size:22px; color:#0D0D0D; font-weight:bold;">${empName}</div>
+                    </div>
+                    <div style="background:#0D0D0D; padding:12px 24px; border-radius:8px; text-align:center;">
+                        <div style="font-size:9px; color:#888; text-transform:uppercase;">Final Score</div>
+                        <div style="font-size:32px; color:#D4AF37; font-weight:700;">${totalScore}</div>
+                        <div style="font-size:18px; color:${gradeColor}; font-weight:700;">Grade ${grade}</div>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-bottom:12px;">
+                    <div style="flex:1; background:#1A1A1A; border:1px solid #2D2D2D; border-radius:8px; padding:14px;">
+                        <div style="font-size:10px; color:#D4AF37; text-transform:uppercase; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #2D2D2D;">Financial (55%)</div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px;"><span style="color:#888;">Revenue</span><span style="color:#D4AF37; font-weight:600;">${revenueScore}</span></div>
+                        <div style="font-size:14px; color:#FFF; font-weight:600;">Rp ${revenue.toLocaleString('id-ID')}</div>
+                        <div style="font-size:10px; color:#888; margin-bottom:10px;">Target: Rp ${targetRevenue.toLocaleString('id-ID')}</div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px;"><span style="color:#888;">Rasio Closing</span><span style="color:#D4AF37; font-weight:600;">${closingScore}</span></div>
+                        <div style="font-size:14px; color:#FFF; font-weight:600;">${closing} dari ${leads} leads (${closingRatio})</div>
+                    </div>
+                    <div style="flex:1; background:#1A1A1A; border:1px solid #2D2D2D; border-radius:8px; padding:14px;">
+                        <div style="font-size:10px; color:#D4AF37; text-transform:uppercase; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #2D2D2D;">Customer (15%)</div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px;"><span style="color:#888;">Trial Class Hadir</span><span style="color:#D4AF37; font-weight:600;">${trialScore}</span></div>
+                        <div style="font-size:14px; color:#FFF; font-weight:600;">${trial} orang</div>
+                        <div style="font-size:10px; color:#888;">Target: min. 20 orang</div>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-bottom:12px;">
+                    <div style="flex:1; background:#1A1A1A; border:1px solid #2D2D2D; border-radius:8px; padding:14px;">
+                        <div style="font-size:10px; color:#D4AF37; text-transform:uppercase; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #2D2D2D;">Internal Process (10%)</div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px;"><span style="color:#888;">Akurasi Data</span><span style="color:#D4AF37; font-weight:600;">${errorScore}</span></div>
+                        <div style="font-size:14px; color:#FFF; font-weight:600;">${errors} kesalahan</div>
+                        <div style="font-size:10px; color:#888;">Max: 2 kesalahan</div>
+                    </div>
+                    <div style="flex:1; background:#1A1A1A; border:1px solid #2D2D2D; border-radius:8px; padding:14px;">
+                        <div style="font-size:10px; color:#D4AF37; text-transform:uppercase; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #2D2D2D;">Learning & Growth (20%)</div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:5px;"><span style="color:#888;">Typing Test</span><span style="color:#FFF;">${typing} <span style="color:#D4AF37;">(${typingScore})</span></span></div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:5px;"><span style="color:#888;">Kolaborasi Tim</span><span style="color:#FFF;">${collab}/5 <span style="color:#D4AF37;">(${collabScore})</span></span></div>
+                        <div style="display:flex; justify-content:space-between; font-size:11px;"><span style="color:#888;">Pemahaman Tools</span><span style="color:#FFF;">${tools}/5 <span style="color:#D4AF37;">(${toolsScore})</span></span></div>
+                    </div>
+                </div>
+
+                <div style="background:#1A1A1A; border:1px solid #2D2D2D; border-radius:8px; padding:14px; margin-bottom:12px;">
+                    <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #2D2D2D;">Data Tracking (Non-Scored)</div>
+                    <div style="display:flex; gap:12px;">
+                        <div style="flex:1; text-align:center; padding:12px; background:#0D0D0D; border-radius:6px;">
+                            <div style="font-size:9px; color:#888; text-transform:uppercase;">Follow Up</div>
+                            <div style="font-size:22px; color:#D4AF37; font-weight:700;">${followUp}</div>
+                            <div style="font-size:9px; color:#888;">${followUpRate}</div>
+                        </div>
+                        <div style="flex:1; text-align:center; padding:12px; background:#0D0D0D; border-radius:6px;">
+                            <div style="font-size:9px; color:#888; text-transform:uppercase;">Response</div>
+                            <div style="font-size:22px; color:#D4AF37; font-weight:700;">${response}</div>
+                            <div style="font-size:9px; color:#888;">dari ${followUp}</div>
+                        </div>
+                        <div style="flex:1; text-align:center; padding:12px; background:#0D0D0D; border-radius:6px;">
+                            <div style="font-size:9px; color:#888; text-transform:uppercase;">Response Rate</div>
+                            <div style="font-size:22px; color:#D4AF37; font-weight:700;">${responseRate}</div>
+                            <div style="font-size:9px; color:#888;">efektivitas</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:#1A1A1A; border:1px solid #D4AF37; border-radius:8px; padding:14px; margin-bottom:15px;">
+                    <div style="font-size:10px; color:#D4AF37; text-transform:uppercase; margin-bottom:10px;">Feedback</div>
+                    <div style="font-size:12px; color:#FAFAFA; line-height:1.5;">${feedback}</div>
+                </div>
+            </div>`;
+        }
+
+        // Preview Individual PDF
+        function previewIndividualPDF(empId, empName) {
+            currentPreviewEmpId = empId;
+            currentPreviewEmpName = empName;
+
+            const content = generatePDFContent(empId, empName);
+            document.getElementById('previewContent').innerHTML = content;
+            document.getElementById('previewModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+
+            // Update download button
+            document.getElementById('previewDownloadBtn').onclick = function () {
+                exportIndividualPDF(currentPreviewEmpId, currentPreviewEmpName);
+            };
+        }
+
+        // Close Preview
+        function closePreview() {
+            document.getElementById('previewModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closePreview();
+            }
+        });
+
+        // Export Individual PDF
+        async function exportIndividualPDF(empId, empName) {
+            const month = document.getElementById('month');
+            const year = document.getElementById('year').value;
+            const monthName = month.options[month.selectedIndex].text;
+
+            const pdfContent = document.createElement('div');
+            pdfContent.innerHTML = generatePDFContent(empId, empName);
+
+            pdfContent.style.width = '794px';
+            pdfContent.style.position = 'absolute';
+            pdfContent.style.left = '-9999px';
+            pdfContent.style.top = '0';
+            document.body.appendChild(pdfContent);
+
+            const element = pdfContent.querySelector('#pdfPage');
+
+            const opt = {
+                margin: [0, 0, 0, 0],
+                filename: `KPI_${empName.replace(/\s+/g, '_')}_${monthName}_${year}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    scrollY: 0,
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait'
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            try {
+                await html2pdf().set(opt).from(element).save();
+            } catch (error) {
+                console.error("Gagal export PDF:", error);
+            } finally {
+                document.body.removeChild(pdfContent);
+                closePreview();
+            }
+        }
+
+        // Export All Individual PDFs (satu per satu)
+        async function exportAllIndividualPDF() {
+            const month = document.getElementById('month');
+            const year = document.getElementById('year').value;
+            const monthName = month.options[month.selectedIndex].text;
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loadingOverlay';
+            loadingDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;';
+            loadingDiv.innerHTML = `<div style="color:#D4AF37;font-size:24px;margin-bottom:20px;">Generating PDFs...</div><div id="progressText" style="color:#fff;font-size:16px;">0 / ${employees.length}</div>`;
+            document.body.appendChild(loadingDiv);
+
+            for (let i = 0; i < employees.length; i++) {
+                const emp = employees[i];
+                document.getElementById('progressText').textContent = `${i + 1} / ${employees.length} - ${emp.name}`;
+
+                const pdfContent = document.createElement('div');
+                pdfContent.innerHTML = generatePDFContent(emp.id, emp.name);
+                pdfContent.style.position = 'fixed';
+                pdfContent.style.left = '0';
+                pdfContent.style.top = '0';
+                pdfContent.style.zIndex = '-9999';
+                document.body.appendChild(pdfContent);
+
+                const element = pdfContent.querySelector('#pdfPage');
+
+                // A4 = 794 x 1123 px at 96 DPI
+                const opt = {
+                    margin: 0,
+                    filename: `KPI_${emp.name.replace(/\s+/g, '_')}_${monthName}_${year}.pdf`,
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
+                        width: 794,
+                        height: 1123,
+                        windowWidth: 794,
+                        windowHeight: 1123
+                    },
+                    jsPDF: {
+                        unit: 'px',
+                        format: [794, 1123],
+                        orientation: 'portrait',
+                        hotfixes: ['px_scaling']
+                    }
+                };
+
+                await html2pdf().set(opt).from(element).save();
+                document.body.removeChild(pdfContent);
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            document.body.removeChild(loadingDiv);
+            alert('Semua PDF berhasil di-download!');
+        }
+    </script>
+</body>
+
+</html>
